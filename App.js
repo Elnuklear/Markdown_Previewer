@@ -2,16 +2,25 @@ import * as React from 'react';
 import { useRef, useEffect } from 'react';
 import './App.css';
 
+/* const textReducer = (state, action) => {
+  switch (action.type) {
+    case 'insertLineBreak':
+      return {
+
+      }
+  }
+} */
+
 function App() {
   const [textInput, setTextInput] = React.useState('');
   const textAreaRef = useRef(null);
   const caretPositionRef = useRef(0);
 
   useEffect(() => {
-    const handleKeyPress = () => {
+    const handleKeyPress = (e) => {
       textAreaRef.current.focus(); //Focuses the textarea after a keypress
       textAreaRef.current.setSelectionRange(caretPositionRef.current, caretPositionRef.current); //Saves the caret position.
-      console.log('@handleKeyPress');
+      console.log('Keypressed: ', e.inputType);
     };
 
     window.addEventListener('input', handleKeyPress);
