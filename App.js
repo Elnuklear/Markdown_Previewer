@@ -1,35 +1,48 @@
-import * as React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
   const [textInput, setTextInput] = React.useState('');
+  const textAreaRef = useRef(null);
 
+  useEffect(() => {
+    const handleKeyPress = () => {
+      textAreaRef.current.focus(); //Focuses the textarea after a keypress
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    }
+  }, []);
+
+  console.log('@thetopofApp')
+  
   const handleChange = (e) => {
-    e.preventDefault()
     console.log(e);
     setTextInput(e.target.value);
     console.log(e.target.value);
     };
     
-  /* const TextBox = () => {
+  const TextBox = () => {
     console.log('TextBox renders');
    
     return(
     <div
     id="previewer-top"
-    type="text"
     >
       <textarea
-        onChange={handleChange}
+        ref={textAreaRef}
         value={textInput}
-      >
-      </textarea>
+        onChange={handleChange}
+      />
         <hr />
     </div>
     )
-  };*/
+  };
 
-  const Previewer = ({ outPut }) => {
+  const Previewer = ({ output }) => {
     console.log('Previewer renders');
     
     return(
@@ -37,7 +50,7 @@ function App() {
     id="previewer-bottom"
     type="text"
     >
-      <p>{outPut}</p>
+      <p>{output}</p>
     </div>
     );
   };
@@ -45,10 +58,8 @@ function App() {
   return (
       <div className="App">
       <header>Markdown Previewer</header>
-      <textarea
-        onChange={handleChange}
-      ></textarea>
-      <Previewer outPut={textInput} />
+      <TextBox />
+      <Previewer output={textInput} />
     </div>
   );
 };
