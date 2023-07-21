@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import * as React from 'react';
+import { useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -6,14 +7,14 @@ function App() {
   const textAreaRef = useRef(null);
 
   useEffect(() => {
-    const handleKeyPress = () => {
-      textAreaRef.current.focus(); //Focuses the textarea after a keypress
+    const handleKeyPress = (e) => {
+      textAreaRef.current.focus(e); //Focuses the textarea after a keypress
     };
 
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener('input', handleKeyPress);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener('input', handleKeyPress);
     }
   }, []);
 
@@ -23,19 +24,19 @@ function App() {
     console.log(e);
     setTextInput(e.target.value);
     console.log(e.target.value);
+    console.log(textInput);
     };
     
   const TextBox = () => {
     console.log('TextBox renders');
    
     return(
-    <div
-    id="previewer-top"
-    >
+    <div>
       <textarea
         ref={textAreaRef}
         value={textInput}
         onChange={handleChange}
+        placeholder='Enter text here...'
       />
         <hr />
     </div>
@@ -46,20 +47,21 @@ function App() {
     console.log('Previewer renders');
     
     return(
-    <div
-    id="previewer-bottom"
-    type="text"
-    >
-      <p>{output}</p>
+    <div>
+      {output}
     </div>
     );
   };
 
   return (
-      <div className="App">
-      <header>Markdown Previewer</header>
-      <TextBox />
+    <div className="App">
+      <div className="TextBox">
+        <header>Markdown Previewer</header>
+        <TextBox />
+      </div>
+      <div className='Previewer'>
       <Previewer output={textInput} />
+      </div>
     </div>
   );
 };
