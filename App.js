@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     const handleKeyPress = () => {
       textAreaRef.current.focus(); //Focuses the textarea after a keypress
-      textAreaRef.current.setSelectionRange(caretPositionRef.current, caretPositionRef.current);
+      textAreaRef.current.setSelectionRange(caretPositionRef.current, caretPositionRef.current); //Saves the caret position.
       console.log('@handleKeyPress');
     };
 
@@ -24,17 +24,12 @@ function App() {
   console.log('@thetopofApp')
   
   const handleChange = (e) => {
-    console.log(e);
     setTextInput(e.target.value);
     caretPositionRef.current = e.target.selectionStart;
-    console.log(e.target.value);
     console.log(textInput);
     };
     
-  const TextBox = () => {
-    console.log('TextBox renders');
-   
-    return(
+  const TextBox = () => (
     <div>
       <textarea
         ref={textAreaRef}
@@ -44,18 +39,13 @@ function App() {
       />
         <hr />
     </div>
-    )
-  };
+  );
 
-  const Previewer = ({ output }) => {
-    console.log('Previewer renders');
-    
-    return(
+  const Previewer = ({ output }) => (
     <div>
       {output}
     </div>
-    );
-  };
+  );
 
   return (
     <div className="App">
