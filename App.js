@@ -5,10 +5,13 @@ import './App.css';
 function App() {
   const [textInput, setTextInput] = React.useState('');
   const textAreaRef = useRef(null);
+  const caretPositionRef = useRef(0);
 
   useEffect(() => {
-    const handleKeyPress = (e) => {
-      textAreaRef.current.focus(e); //Focuses the textarea after a keypress
+    const handleKeyPress = () => {
+      textAreaRef.current.focus(); //Focuses the textarea after a keypress
+      textAreaRef.current.setSelectionRange(caretPositionRef.current, caretPositionRef.current);
+      console.log('@handleKeyPress');
     };
 
     window.addEventListener('input', handleKeyPress);
@@ -23,6 +26,7 @@ function App() {
   const handleChange = (e) => {
     console.log(e);
     setTextInput(e.target.value);
+    caretPositionRef.current = e.target.selectionStart;
     console.log(e.target.value);
     console.log(textInput);
     };
