@@ -15,8 +15,7 @@ function App() {
       //Saves the caret position.
       textAreaRef.current.setSelectionRange(caretPositionRef.current, caretPositionRef.current); 
     
-      console.log('Keypressed: ', e.inputType);  
-      console.log(typeof e.inputType);
+      console.log('Keypressed: ', e.inputType);
     };
 
     window.addEventListener('input', handleKeyPress);
@@ -30,7 +29,7 @@ function App() {
     if (e.key === 'Enter') {
       // Prevent default behavior of the Enter key (form submission).
       e.preventDefault();
-      
+
       const {selectionStart, selectionEnd} = e.target;
       // Add a line break (newline) to the current value of the textarea.
       setTextInput(() => textInput + '\n');
