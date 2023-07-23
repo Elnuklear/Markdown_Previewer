@@ -3,13 +3,15 @@ import { useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [textInput, setTextInput] = React.useState('');
+  const [textInput, setTextInput] = React.useState(localStorage.getItem('TextBox') || 'Enter text here...');
   const textAreaRef = useRef(null);
   const caretPositionRef = useRef(0);
 
   console.log('@thetopofApp');
 
   useEffect(() => {
+    localStorage.setItem('TextBox', textInput);
+
     const handleKeyPress = (e) => {
       textAreaRef.current.focus(); //Focuses the textarea after a keypress.
       //Saves the caret position.
@@ -23,7 +25,7 @@ function App() {
     return () => {
       window.removeEventListener('input', handleKeyPress);
     }
-  }, []);
+  }, [textInput]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -47,7 +49,7 @@ function App() {
     setTextInput(e.target.value);
     caretPositionRef.current = e.target.selectionStart;
     console.log(textInput);
-    };
+  };
     
   const TextBox = () => (
     <div>
