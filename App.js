@@ -4,6 +4,7 @@ import './App.css';
 
 function App() {
   const [textInput, setTextInput] = React.useState(localStorage.getItem('TextBox') || '');
+  const [caretPosition, setCaretPosition] = React.useState(0);
   const textAreaRef = useRef(null);
   const caretPositionRef = useRef(0);
 
@@ -13,9 +14,10 @@ function App() {
     localStorage.setItem('TextBox', textInput);
 
     const handleKeyPress = (e) => {
-      textAreaRef.current.focus(); //Focuses the textarea after a keypress.
+      //Focuses the textarea after a keypress.
+      textAreaRef.current.focus(); 
       //Saves the caret position.
-      textAreaRef.current.setSelectionRange(caretPositionRef.current, caretPositionRef.current); 
+      textAreaRef.current.setSelectionRange(caretPositionRef.current, caretPositionRef.current + 1); 
     
       console.log('Keypressed: ', e.inputType);
     };
@@ -28,12 +30,19 @@ function App() {
   }, [textInput]);
 
   const handleKeyDown = (e) => {
-    const {selectionStart, selectionEnd} = e.target;
+    const {selectionStart, selectionEnd} = textAreaRef.current;
     if (e.key === 'Enter') {
       // Prevent default behavior of the Enter key (form submission).
       e.preventDefault();
       // Add a line break (newline) to the current value of the textarea.
-      setTextInput(() => textInput + '\n');
+      setTextInput((prevText) => {
+        const newText = prevText.slice(0, selectionStart) + '\n' + prevText.slice(selectionEnd);
+        
+        return newText      
+      });
+      //Move the caret to the position after the inserted line break.
+      const newCaretPos = selectionStart + 1;
+      textAreaRef.current.setSelectionRange(newCaretPos, newCaretPos)
       
       setTimeout(() => {
       //Refocus of the caret after Enter key is pressed.
@@ -41,8 +50,7 @@ function App() {
       textAreaRef.current.setSelectionRange(selectionStart + 1, selectionEnd + 1);
     });
       console.log('@handleKeyDown', e.key);
-    }
-    if (e.key === 'Tab') {
+    } else if (e.key === 'Tab') {
       // Prevent default behavior of the Tab key leaving the focus area.
       e.preventDefault();
       // Add a tab character to the current value of the textarea.
@@ -63,8 +71,6 @@ function App() {
   };
   
   const handleChange = (e) => {
-    //const newCaretPos;
-
     setTextInput(e.target.value);
     caretPositionRef.current = e.target.selectionStart;
     console.log(textInput);
@@ -77,14 +83,19 @@ function App() {
         value={textInput}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onClick={handleChange} //create a handleSelect function to replace handleChange
         placeholder='Enter text here...'
+        rows={12}
       />
         <hr />
     </div>
   );
 
   const Previewer = ({ output }) => (
-    <div style={{ whiteSpace: 'pre-wrap'}} >
+    <div 
+    style={{ whiteSpace: 'pre-wrap'}}
+    rows={9}
+    >
       {output}
     </div>
   );
