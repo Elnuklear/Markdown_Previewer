@@ -3,7 +3,7 @@ import { useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [textInput, setTextInput] = React.useState(localStorage.getItem('TextBox') || 'Enter text here...');
+  const [textInput, setTextInput] = React.useState(localStorage.getItem('TextBox') || '');
   const textAreaRef = useRef(null);
   const caretPositionRef = useRef(0);
 
@@ -28,24 +28,43 @@ function App() {
   }, [textInput]);
 
   const handleKeyDown = (e) => {
+    const {selectionStart, selectionEnd} = e.target;
     if (e.key === 'Enter') {
       // Prevent default behavior of the Enter key (form submission).
       e.preventDefault();
-
-      const {selectionStart, selectionEnd} = e.target;
       // Add a line break (newline) to the current value of the textarea.
       setTextInput(() => textInput + '\n');
-
+      
       setTimeout(() => {
-        //Refocus of the caret after Enter key is pressed.
-        textAreaRef.current.focus();
-        textAreaRef.current.setSelectionRange(selectionStart + 1, selectionEnd + 1);
-      });
+      //Refocus of the caret after Enter key is pressed.
+      textAreaRef.current.focus();
+      textAreaRef.current.setSelectionRange(selectionStart + 1, selectionEnd + 1);
+    });
       console.log('@handleKeyDown', e.key);
+    }
+    if (e.key === 'Tab') {
+      // Prevent default behavior of the Tab key leaving the focus area.
+      e.preventDefault();
+      // Add a tab character to the current value of the textarea.
+      setTextInput((prevText) => {
+        const updatedText =
+          prevText.substring(0, selectionStart) +
+          '\t' +
+          prevText.substring(selectionEnd);
+
+          setTimeout(() => {
+            //Refocus of the caret after Enter key is pressed.
+            textAreaRef.current.focus();
+            textAreaRef.current.setSelectionRange(selectionStart + 1, selectionEnd + 1);
+          });
+          return updatedText
+      });
     }
   };
   
   const handleChange = (e) => {
+    //const newCaretPos;
+
     setTextInput(e.target.value);
     caretPositionRef.current = e.target.selectionStart;
     console.log(textInput);
