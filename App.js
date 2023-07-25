@@ -4,7 +4,6 @@ import './App.css';
 
 function App() {
   const [textInput, setTextInput] = React.useState(localStorage.getItem('TextBox') || '');
-  const [caretPosition, setCaretPosition] = React.useState(0);
   const textAreaRef = useRef(null);
   const caretPositionRef = useRef(0);
 
@@ -40,9 +39,6 @@ function App() {
         
         return newText      
       });
-      //Move the caret to the position after the inserted line break.
-      const newCaretPos = selectionStart + 1;
-      textAreaRef.current.setSelectionRange(newCaretPos, newCaretPos)
       
       setTimeout(() => {
       //Refocus of the caret after Enter key is pressed.
@@ -50,7 +46,9 @@ function App() {
       textAreaRef.current.setSelectionRange(selectionStart + 1, selectionEnd + 1);
     });
       console.log('@handleKeyDown', e.key);
-    } else if (e.key === 'Tab') {
+    }
+    
+    if (e.key === 'Tab') {
       // Prevent default behavior of the Tab key leaving the focus area.
       e.preventDefault();
       // Add a tab character to the current value of the textarea.
@@ -73,7 +71,12 @@ function App() {
   const handleChange = (e) => {
     setTextInput(e.target.value);
     caretPositionRef.current = e.target.selectionStart;
-    console.log(textInput);
+    console.log('@handleChange:', textInput, e.target.selectionStart, e.target.selectionEnd, caretPositionRef.current);
+  };
+  
+  const handleSelect = (e) => {
+    textAreaRef.current.focus();
+    console.log('@handleSelect', caretPositionRef.current);
   };
     
   const TextBox = () => (
@@ -83,9 +86,8 @@ function App() {
         value={textInput}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        onClick={handleChange} //create a handleSelect function to replace handleChange
+        onClick={handleSelect}
         placeholder='Enter text here...'
-        rows={12}
       />
         <hr />
     </div>
@@ -94,7 +96,6 @@ function App() {
   const Previewer = ({ output }) => (
     <div 
     style={{ whiteSpace: 'pre-wrap'}}
-    rows={9}
     >
       {output}
     </div>
