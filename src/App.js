@@ -9,8 +9,13 @@ function App() {
     setTextInput(e.target.value);
 
     localStorage.setItem('TextBox', textInput);
-    console.log(textInput);
   };
+
+  const clearTextBox = () => {
+    console.log('@clearTextBox')
+    setTextInput('')
+    localStorage.setItem('TextBox', '')
+  }
 
   const parseMarkdown = () => {
     return { __html: marked(textInput) };
@@ -28,7 +33,7 @@ function App() {
           output={ textInput }
         /> */}
       </div>
-      <button onClick={() => {localStorage.clear()}}>Clear Text</button>
+      <button onClick={clearTextBox}>Clear Text</button>
     </div>
   );
 };
