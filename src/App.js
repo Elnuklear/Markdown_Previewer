@@ -28,6 +28,7 @@ function App() {
           output={ textInput }
         /> */}
       </div>
+      <button onClick={() => {localStorage.clear()}}>Clear Text</button>
     </div>
   );
 };
